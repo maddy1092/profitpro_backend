@@ -1,0 +1,967 @@
+openapi: 3.0.3
+info:
+  title: ProfitPro-AI
+  version: 0.0.0
+paths:
+  /favourites/property/{property_id}/:
+    get:
+      operationId: favourites_property_list
+      parameters:
+      - in: path
+        name: property_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - favourites
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FavouriteUser'
+          description: ''
+  /favourites/update:
+    post:
+      operationId: favourites_update_create
+      tags:
+      - favourites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FavouritePropertyCreateDestroy'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FavouritePropertyCreateDestroy'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FavouritePropertyCreateDestroy'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavouritePropertyCreateDestroy'
+          description: ''
+  /favourites/user/{user_id}/:
+    get:
+      operationId: favourites_user_list
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - favourites
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FavouriteProperty'
+          description: ''
+  /properties/:
+    get:
+      operationId: properties_list
+      parameters:
+      - in: query
+        name: baths
+        schema:
+          type: integer
+      - in: query
+        name: baths__gt
+        schema:
+          type: integer
+      - in: query
+        name: baths__lt
+        schema:
+          type: integer
+      - in: query
+        name: beds
+        schema:
+          type: integer
+      - in: query
+        name: beds__gt
+        schema:
+          type: integer
+      - in: query
+        name: beds__lt
+        schema:
+          type: integer
+      - in: query
+        name: location
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: price
+        schema:
+          type: number
+      - in: query
+        name: price__gt
+        schema:
+          type: number
+      - in: query
+        name: price__lt
+        schema:
+          type: number
+      - in: query
+        name: property_status
+        schema:
+          type: string
+          enum:
+          - for_rent
+          - for_sale
+          - rented
+        description: |-
+          * `for_sale` - For Sale
+          * `for_rent` - For Rent
+          * `rented` - Rented
+
+          * `for_sale` - For Sale
+          * `for_rent` - For Rent
+          * `rented` - Rented
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: types
+        schema:
+          type: string
+      tags:
+      - properties
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPropertyList'
+          description: ''
+    post:
+      operationId: properties_create
+      tags:
+      - properties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+  /properties/{property_id}/:
+    get:
+      operationId: properties_retrieve
+      parameters:
+      - in: path
+        name: property_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - properties
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+    put:
+      operationId: properties_update
+      parameters:
+      - in: path
+        name: property_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - properties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Property'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Property'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: ''
+    delete:
+      operationId: properties_destroy
+      parameters:
+      - in: path
+        name: property_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - properties
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /tours/request-tour:
+    post:
+      operationId: tours_request_tour_create
+      tags:
+      - tours
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tour'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Tour'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Tour'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tour'
+          description: ''
+  /users/login:
+    post:
+      operationId: users_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /users/logout:
+    post:
+      operationId: users_logout_create
+      description: |-
+        Takes a token and blacklists it. Must be used with the
+        `rest_framework_simplejwt.token_blacklist` app installed.
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenBlacklist'
+          description: ''
+  /users/password/change:
+    put:
+      operationId: users_password_change_update
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePassword'
+          description: ''
+  /users/register:
+    post:
+      operationId: users_register_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignUp'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserSignUp'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserSignUp'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSignUp'
+          description: ''
+  /users/token/refresh:
+    post:
+      operationId: users_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /users/token/verify:
+    post:
+      operationId: users_token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
+components:
+  schemas:
+    ChangePassword:
+      type: object
+      properties:
+        old_password:
+          type: string
+        new_password:
+          type: string
+      required:
+      - new_password
+      - old_password
+    FavouriteProperty:
+      type: object
+      properties:
+        property_id:
+          type: integer
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        property_status:
+          $ref: '#/components/schemas/PropertyStatusEnum'
+        property_type:
+          $ref: '#/components/schemas/PropertyTypeEnum'
+        description:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        images:
+          type: array
+          items:
+            type: string
+            maxLength: 200
+          nullable: true
+          maxItems: 5
+        beds:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        baths:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        types:
+          type: string
+          maxLength: 255
+        size:
+          type: string
+          maxLength: 255
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        location:
+          type: string
+          maxLength: 255
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,5}(?:\.\d{0,5})?$
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,5}(?:\.\d{0,5})?$
+        feature:
+          type: string
+          maxLength: 255
+        user:
+          type: integer
+          title: User id
+      required:
+      - baths
+      - beds
+      - created
+      - description
+      - feature
+      - location
+      - modified
+      - property_id
+      - size
+      - title
+      - types
+      - user
+    FavouritePropertyCreateDestroy:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        property_id:
+          type: integer
+      required:
+      - property_id
+      - user_id
+    FavouriteUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          title: User id
+        first_name:
+          type: string
+          maxLength: 30
+        last_name:
+          type: string
+          maxLength: 30
+      required:
+      - id
+    PaginatedPropertyList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'
+    Property:
+      type: object
+      properties:
+        property_id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          title: User id
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        property_status:
+          $ref: '#/components/schemas/PropertyStatusEnum'
+        description:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        beds:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        baths:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        types:
+          type: string
+          maxLength: 255
+        size:
+          type: string
+          maxLength: 255
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        location:
+          type: string
+          maxLength: 255
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,5}(?:\.\d{0,5})?$
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,5}(?:\.\d{0,5})?$
+        feature:
+          type: string
+          maxLength: 255
+        images:
+          type: array
+          items:
+            type: string
+            maxLength: 200
+          nullable: true
+          maxItems: 5
+      required:
+      - baths
+      - beds
+      - description
+      - feature
+      - location
+      - property_id
+      - size
+      - title
+      - types
+      - user
+    PropertyStatusEnum:
+      enum:
+      - for_sale
+      - for_rent
+      - rented
+      type: string
+      description: |-
+        * `for_sale` - For Sale
+        * `for_rent` - For Rent
+        * `rented` - Rented
+    PropertyTypeEnum:
+      enum:
+      - condo
+      - studio
+      - house
+      - plot
+      - mension
+      - shop
+      - hotel
+      - warehouse
+      type: string
+      description: |-
+        * `condo` - Condo
+        * `studio` - Studio
+        * `house` - House
+        * `plot` - Plot
+        * `mension` - Mension
+        * `shop` - Shop
+        * `hotel` - Hotel
+        * `warehouse` - Warehouse
+    TokenBlacklist:
+      type: object
+      properties:
+        refresh:
+          type: string
+      required:
+      - refresh
+    TokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - email
+      - password
+      - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
+    Tour:
+      type: object
+      properties:
+        tour_id:
+          type: integer
+          readOnly: true
+        user_id:
+          type: integer
+          title: User id
+        property_id:
+          type: integer
+        scheduled_date:
+          type: string
+          format: date
+        scheduled_time:
+          type: string
+          format: time
+        message:
+          type: string
+          maxLength: 300
+        property:
+          allOf:
+          - $ref: '#/components/schemas/Property'
+          readOnly: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+      required:
+      - message
+      - property
+      - property_id
+      - scheduled_date
+      - scheduled_time
+      - tour_id
+      - user
+      - user_id
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          title: User id
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+      required:
+      - email
+      - id
+      - password
+    UserSignUp:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          title: User id
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        first_name:
+          type: string
+          maxLength: 30
+        last_name:
+          type: string
+          maxLength: 30
+      required:
+      - email
+      - first_name
+      - id
+      - last_name
+      - password
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
